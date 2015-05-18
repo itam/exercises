@@ -15,7 +15,7 @@
         // console.log('offLimitsMap ', this.offLimitsMap);
     };
     
-    var getOptimalResult = function(valueArray) {
+    var getOptimalResult = function(valueArray) {    
         var indexMap = {};
         var total = 0;
         
@@ -23,7 +23,15 @@
         this.maxIndex = valueArray.length - 1;
         
         valueArray.forEach(function(item, index) {
-            indexMap[item] = index;            
+            if(typeof indexMap[item] === 'undefined') {
+                indexMap[item] = index;
+            } else {
+                if(!(typeof indexMap[item] === 'object')) {
+                    indexMap[item] = [indexMap[item], index];                    
+                } else {
+                    indexMap[item].push(index);
+                }
+            }
         });
         
         // console.log(indexMap);
@@ -36,9 +44,17 @@
         
         for(var i = 0; i <= this.maxIndex; i ++) {
             var originalIndex = indexMap[valueArray[i]];
+
+            // console.log('indexMap: ', indexMap[valueArray[i]]);
+            
+            if(typeof originalIndex === 'object') {
+                originalIndex = originalIndex.pop();
+            }
+            
+            // console.log('index: ', i);
+            // console.log('originalIndex:', originalIndex);
             
             // console.log('offLimitsMap ', this.offLimitsMap);
-            // console.log(valueArray[i]);
 
             if(!this.offLimitsMap[originalIndex]) {
                 // console.log('added: ', valueArray[i]);
